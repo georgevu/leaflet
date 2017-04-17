@@ -1,0 +1,28 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#`r Sys.Date()`
+
+## US Capitols
+
+```{r echo=FALSE, warning=FALSE}
+library(leaflet)
+library(jsonlite)
+# url with some information about project in Andalussia
+file <- './us_capitols.json'
+
+# read url and convert to data.frame
+capitols <- fromJSON(txt=file, flatten=TRUE)
+my_map <- leaflet() %>% addTiles()
+for (c in capitols) {
+  url <- paste("<a href=http://en.wikipedia.org/wiki/", gsub(" ", "%20", c$capital), ",_", gsub(" ", "%20", c$name), ">", c$capital, ", ", c$name, "</a>", sep="")
+  my_map <- addMarkers(my_map, lat=as.numeric(c$lat), lng=as.numeric(c$long), popup = url)
+}
+my_map
+
+```
+
